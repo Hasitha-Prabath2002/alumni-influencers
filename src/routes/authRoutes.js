@@ -1,6 +1,12 @@
-const express = require('express');
-const { body } = require('express-validator');
-const { register, verifyEmail, login, requestPasswordReset, resetPassword } = require('../controllers/authController');
+const express = require("express");
+const { body } = require("express-validator");
+const {
+  register,
+  verifyEmail,
+  login,
+  requestPasswordReset,
+  resetPassword,
+} = require("../controllers/authController");
 
 const router = express.Router();
 
@@ -42,12 +48,29 @@ const router = express.Router();
  *       201:
  *         description: Registration successful, check email for verification
  */
-router.post('/register', [
-  body('email').isEmail().withMessage('Enter a valid email').matches(/@.*\.edu$/).withMessage('Must be a university email (.edu)').normalizeEmail(),
-  body('password').isStrongPassword().withMessage('Password must be strong'),
-  body('firstName').trim().escape().notEmpty().withMessage('First name required'),
-  body('lastName').trim().escape().notEmpty().withMessage('Last name required')
-], register);
+router.post(
+  "/register",
+  [
+    body("email")
+      .isEmail()
+      .withMessage("Enter a valid email")
+      .matches(/@.*\.edu(\.\w+)?$/)
+      .withMessage("Must be a university email (.edu)")
+      .normalizeEmail(),
+    body("password").isStrongPassword().withMessage("Password must be strong"),
+    body("firstName")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("First name required"),
+    body("lastName")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Last name required"),
+  ],
+  register,
+);
 
 /**
  * @swagger
@@ -65,7 +88,7 @@ router.post('/register', [
  *       200:
  *         description: Email verified successfully. You can now login.
  */
-router.get('/verify/:token', verifyEmail);
+router.get("/verify/:token", verifyEmail);
 
 /**
  * @swagger
@@ -89,10 +112,11 @@ router.get('/verify/:token', verifyEmail);
  *       200:
  *         description: JWT generated successfully
  */
-router.post('/login', [
-  body('email').isEmail().normalizeEmail(),
-  body('password').notEmpty()
-], login);
+router.post(
+  "/login",
+  [body("email").isEmail().normalizeEmail(), body("password").notEmpty()],
+  login,
+);
 
 /**
  * @swagger
@@ -114,9 +138,11 @@ router.post('/login', [
  *       200:
  *         description: Successfully processed email
  */
-router.post('/password-reset-request', [
-  body('email').isEmail().normalizeEmail()
-], requestPasswordReset);
+router.post(
+  "/password-reset-request",
+  [body("email").isEmail().normalizeEmail()],
+  requestPasswordReset,
+);
 
 /**
  * @swagger
@@ -140,9 +166,10 @@ router.post('/password-reset-request', [
  *       200:
  *         description: Password reset successful
  */
-router.post('/password-reset', [
-  body('token').notEmpty(),
-  body('newPassword').isStrongPassword()
-], resetPassword);
+router.post(
+  "/password-reset",
+  [body("token").notEmpty(), body("newPassword").isStrongPassword()],
+  resetPassword,
+);
 
 module.exports = router;

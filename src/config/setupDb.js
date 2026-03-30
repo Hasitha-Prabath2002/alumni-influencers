@@ -14,7 +14,7 @@ async function setupDatabase() {
 
     const dbName = process.env.DB_NAME || 'alumni_db';
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
-    console.log(`✅ Database '${dbName}' verified/created.`);
+    console.log(`Database '${dbName}' verified/created.`);
 
     // Switch to the newly created database
     await connection.changeUser({ database: dbName });
@@ -129,9 +129,9 @@ async function setupDatabase() {
       )
     `);
 
-    console.log('✅ Database tables setup completely executed successfully.');
+    console.log('Database tables setup completely executed successfully.');
   } catch (error) {
-    console.error('❌ Error setting up database tables:', error);
+    console.error('Error setting up database tables:', error);
   } finally {
     if (connection) await connection.end();
   }

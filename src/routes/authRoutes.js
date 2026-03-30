@@ -54,8 +54,10 @@ router.post(
     body("email")
       .isEmail()
       .withMessage("Enter a valid email")
-      .matches(/@.*\.edu(\.\w+)?$/)
-      .withMessage("Must be a university email (.edu)")
+      .matches(/^[a-zA-Z0-9._%+-]+@([a-zA-Z0-9-]+\.)*(edu|ac\.uk|ac\.lk)$/)
+      .withMessage("Must be a valid university email")
+      // .matches(/@.*\.edu(\.\w+)?$/)
+      // .withMessage("Must be a university email (.edu)")
       .normalizeEmail(),
     body("password").isStrongPassword().withMessage("Password must be strong"),
     body("firstName")

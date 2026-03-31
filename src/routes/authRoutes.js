@@ -59,7 +59,11 @@ router.post(
       // .matches(/@.*\.edu(\.\w+)?$/)
       // .withMessage("Must be a university email (.edu)")
       .normalizeEmail(),
-    body("password").isStrongPassword().withMessage("Password must be strong"),
+    body("password")
+      .isStrongPassword()
+      .withMessage(
+        "Password must be at least 8 characters long and include uppercase, lowercase, a number, and a special character",
+      ),
     body("firstName")
       .trim()
       .escape()

@@ -1,16 +1,27 @@
-const express = require('express');
-const { body } = require('express-validator');
-const { authMiddleware } = require('../middleware/authMiddleware');
-const upload = require('../middleware/uploadMiddleware');
-const { 
-  getProfile, updateProfile, 
-  addDegree, getDegrees, deleteDegree,
-  addCertification, getCertifications, deleteCertification,
-  addLicence, getLicences, deleteLicence, 
-  addCourse, getCourses, deleteCourse,
-  addEmployment, getEmployment, deleteEmployment, 
-  uploadProfileImage
-} = require('../controllers/profileController');
+const express = require("express");
+const { body } = require("express-validator");
+const { authMiddleware } = require("../middleware/authMiddleware");
+const upload = require("../middleware/uploadMiddleware");
+const {
+  getProfile,
+  updateProfile,
+  addDegree,
+  getDegrees,
+  deleteDegree,
+  addCertification,
+  getCertifications,
+  deleteCertification,
+  addLicence,
+  getLicences,
+  deleteLicence,
+  addCourse,
+  getCourses,
+  deleteCourse,
+  addEmployment,
+  getEmployment,
+  deleteEmployment,
+  uploadProfileImage,
+} = require("../controllers/profileController");
 
 const router = express.Router();
 
@@ -33,7 +44,7 @@ router.use(authMiddleware);
  *       200:
  *         description: Profile successfully retrieved
  */
-router.get('/', getProfile);
+router.get("/", getProfile);
 
 /**
  * @swagger
@@ -45,10 +56,14 @@ router.get('/', getProfile);
  *       200:
  *         description: Profile updated
  */
-router.put('/', [
-  body('bio').optional().isString().trim().escape(),
-  body('linkedinUrl').optional().isURL().trim()
-], updateProfile);
+router.put(
+  "/",
+  [
+    body("bio").optional().isString().trim().escape(),
+    body("linkedinUrl").optional().isURL().trim(),
+  ],
+  updateProfile,
+);
 
 /**
  * @swagger
@@ -60,7 +75,7 @@ router.put('/', [
  *       200:
  *         description: URL generated safely
  */
-router.post('/image', upload.single('profileImage'), uploadProfileImage);
+router.post("/image", upload.single("profileImage"), uploadProfileImage);
 
 // Degrees
 /**
@@ -73,13 +88,17 @@ router.post('/image', upload.single('profileImage'), uploadProfileImage);
  *     summary: Add new degree
  *     tags: [Profiles]
  */
-router.get('/degrees', getDegrees);
-router.post('/degrees', [
-  body('degreeName').notEmpty().trim().escape(),
-  body('universityUrl').isURL().trim(),
-  body('completionDate').isDate()
-], addDegree);
-router.delete('/degrees/:id', deleteDegree);
+router.get("/degrees", getDegrees);
+router.post(
+  "/degrees",
+  [
+    body("degreeName").notEmpty().trim().escape(),
+    body("universityUrl").isURL().trim(),
+    body("completionDate").isDate(),
+  ],
+  addDegree,
+);
+router.delete("/degrees/:id", deleteDegree);
 
 // Certifications
 /**
@@ -92,13 +111,17 @@ router.delete('/degrees/:id', deleteDegree);
  *     summary: Add new certification
  *     tags: [Profiles]
  */
-router.get('/certifications', getCertifications);
-router.post('/certifications', [
-  body('certName').notEmpty().trim().escape(),
-  body('courseUrl').isURL().trim(),
-  body('completionDate').isDate()
-], addCertification);
-router.delete('/certifications/:id', deleteCertification);
+router.get("/certifications", getCertifications);
+router.post(
+  "/certifications",
+  [
+    body("certName").notEmpty().trim().escape(),
+    body("courseUrl").isURL().trim(),
+    body("completionDate").isDate(),
+  ],
+  addCertification,
+);
+router.delete("/certifications/:id", deleteCertification);
 
 // Licences
 /**
@@ -111,13 +134,17 @@ router.delete('/certifications/:id', deleteCertification);
  *     summary: Add new licence
  *     tags: [Profiles]
  */
-router.get('/licences', getLicences);
-router.post('/licences', [
-  body('licenceName').notEmpty().trim().escape(),
-  body('bodyUrl').isURL().trim(),
-  body('completionDate').isDate()
-], addLicence);
-router.delete('/licences/:id', deleteLicence);
+router.get("/licences", getLicences);
+router.post(
+  "/licences",
+  [
+    body("licenceName").notEmpty().trim().escape(),
+    body("bodyUrl").isURL().trim(),
+    body("completionDate").isDate(),
+  ],
+  addLicence,
+);
+router.delete("/licences/:id", deleteLicence);
 
 // Professional Courses
 /**
@@ -130,13 +157,17 @@ router.delete('/licences/:id', deleteLicence);
  *     summary: Add new course
  *     tags: [Profiles]
  */
-router.get('/courses', getCourses);
-router.post('/courses', [
-  body('courseName').notEmpty().trim().escape(),
-  body('courseUrl').isURL().trim(),
-  body('completionDate').isDate()
-], addCourse);
-router.delete('/courses/:id', deleteCourse);
+router.get("/courses", getCourses);
+router.post(
+  "/courses",
+  [
+    body("courseName").notEmpty().trim().escape(),
+    body("courseUrl").isURL().trim(),
+    body("completionDate").isDate(),
+  ],
+  addCourse,
+);
+router.delete("/courses/:id", deleteCourse);
 
 // Employment History
 /**
@@ -149,13 +180,17 @@ router.delete('/courses/:id', deleteCourse);
  *     summary: Add new employment role
  *     tags: [Profiles]
  */
-router.get('/employment', getEmployment);
-router.post('/employment', [
-  body('companyName').notEmpty().trim().escape(),
-  body('role').notEmpty().trim().escape(),
-  body('startDate').isDate(),
-  body('endDate').optional().isDate()
-], addEmployment);
-router.delete('/employment/:id', deleteEmployment);
+router.get("/employment", getEmployment);
+router.post(
+  "/employment",
+  [
+    body("companyName").notEmpty().trim().escape(),
+    body("role").notEmpty().trim().escape(),
+    body("startDate").isDate(),
+    body("endDate").optional().isDate(),
+  ],
+  addEmployment,
+);
+router.delete("/employment/:id", deleteEmployment);
 
 module.exports = router;

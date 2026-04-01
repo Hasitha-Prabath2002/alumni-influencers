@@ -48,7 +48,7 @@ const register = async (req, res) => {
     );
 
     res.status(201).json({
-      message: "Registration successful. Check your email for verification.",
+      message: "Registration successful. Check your email for verification",
     });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
@@ -135,7 +135,7 @@ const requestPasswordReset = async (req, res) => {
       connection.release();
       // Always return success even if user not found for security (avoid enumerating emails)
       return res.json({
-        message: "If the email exists, a password reset link has been sent.",
+        message: "If the email exists, a password reset link has been sent",
       });
     }
 
@@ -154,7 +154,7 @@ const requestPasswordReset = async (req, res) => {
       `Use this token to reset your password: ${resetToken}`,
     );
     res.json({
-      message: "If the email exists, a password reset link has been sent.",
+      message: "If the email exists, a password reset link has been sent",
     });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
@@ -186,7 +186,7 @@ const resetPassword = async (req, res) => {
     );
     connection.release();
 
-    res.json({ message: "Password reset successful. You can now login." });
+    res.json({ message: "Password reset successful. You can now login" });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

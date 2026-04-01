@@ -1,6 +1,6 @@
-const express = require('express');
-const { getTodayAlumnus } = require('../controllers/publicController');
-const { verifyApiKey } = require('../middleware/clientApiKeyMiddleware');
+const express = require("express");
+const { getTodayAlumnus } = require("../controllers/publicController");
+const { verifyApiKey } = require("../middleware/clientApiKeyMiddleware");
 
 const router = express.Router();
 
@@ -24,6 +24,6 @@ const router = express.Router();
  *         description: No featured alumnus today found
  */
 // Securing the AR target endpoint requiring header 'x-api-key'
-router.get('/featured', verifyApiKey, getTodayAlumnus);
+router.get("/featured", verifyApiKey, getTodayAlumnus);
 
 module.exports = router;

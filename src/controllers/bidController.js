@@ -38,7 +38,7 @@ const placeBid = async (req, res) => {
     if (existing.length > 0) {
       connection.release();
       return res.status(400).json({
-        error: "Bid already placed for tomorrow, Use update to increase.",
+        error: "Bid already placed for tomorrow, Use update to increase",
       });
     }
 
@@ -48,7 +48,7 @@ const placeBid = async (req, res) => {
     );
 
     connection.release();
-    res.status(201).json({ message: "Bid placed successfully." });
+    res.status(201).json({ message: "Bid placed successfully" });
   } catch (error) {
     res.status(500).json({ error: "Database error" });
   }

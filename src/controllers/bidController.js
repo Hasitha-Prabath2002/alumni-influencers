@@ -73,14 +73,14 @@ const updateBid = async (req, res) => {
 
     if (existing.length === 0) {
       connection.release();
-      return res.status(404).json({ error: "No bid exists for tomorrow." });
+      return res.status(404).json({ error: "No bid exists for tomorrow" });
     }
 
     if (amount <= existing[0].amount) {
       connection.release();
       return res
         .status(400)
-        .json({ error: "New amount must be higher than current amount." });
+        .json({ error: "New amount must be higher than current amount" });
     }
 
     await connection.query(
@@ -88,7 +88,7 @@ const updateBid = async (req, res) => {
       [amount, req.user.id, bidDateStr],
     );
     connection.release();
-    res.json({ message: "Bid updated successfully." });
+    res.json({ message: "Bid updated successfully" });
   } catch (error) {
     res.status(500).json({ error: "Database error" });
   }

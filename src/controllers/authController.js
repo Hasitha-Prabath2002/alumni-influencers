@@ -47,11 +47,9 @@ const register = async (req, res) => {
       `Use this token to verify: ${token}`,
     );
 
-    res
-      .status(201)
-      .json({
-        message: "Registration successful. Check your email for verification.",
-      });
+    res.status(201).json({
+      message: "Registration successful. Check your email for verification.",
+    });
   } catch (error) {
     res.status(500).json({ error: "Internal Server Error" });
   }

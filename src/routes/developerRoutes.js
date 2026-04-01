@@ -1,7 +1,12 @@
-const express = require('express');
-const { body } = require('express-validator');
-const { authMiddleware } = require('../middleware/authMiddleware');
-const { generateApiKey, getApiKeys, revokeApiKey, getKeyStats } = require('../controllers/developerController');
+const express = require("express");
+const { body } = require("express-validator");
+const { authMiddleware } = require("../middleware/authMiddleware");
+const {
+  generateApiKey,
+  getApiKeys,
+  revokeApiKey,
+  getKeyStats,
+} = require("../controllers/developerController");
 
 const router = express.Router();
 
@@ -35,9 +40,11 @@ router.use(authMiddleware);
  *       201:
  *         description: Safely returns raw API key just once
  */
-router.post('/keys', [
-  body('name').trim().notEmpty().withMessage('Key name is required').escape()
-], generateApiKey);
+router.post(
+  "/keys",
+  [body("name").trim().notEmpty().withMessage("Key name is required").escape()],
+  generateApiKey,
+);
 
 /**
  * @swagger
@@ -49,7 +56,7 @@ router.post('/keys', [
  *       200:
  *         description: List of API keys with only prefixes shown securely
  */
-router.get('/keys', getApiKeys);
+router.get("/keys", getApiKeys);
 
 /**
  * @swagger
@@ -67,7 +74,7 @@ router.get('/keys', getApiKeys);
  *       200:
  *         description: API Key revoked completely
  */
-router.delete('/keys/:id', revokeApiKey);
+router.delete("/keys/:id", revokeApiKey);
 
 /**
  * @swagger
@@ -85,6 +92,6 @@ router.delete('/keys/:id', revokeApiKey);
  *       200:
  *         description: Analytics object grouping timestamp and hit counts
  */
-router.get('/keys/:id/stats', getKeyStats);
+router.get("/keys/:id/stats", getKeyStats);
 
 module.exports = router;

@@ -4,12 +4,9 @@ const verifyApiKey = async (req, res, next) => {
   const apiKey = req.header("x-api-key");
 
   if (!apiKey) {
-    return res
-      .status(401)
-      .json({
-        error:
-          "API Key missing. Access denied. Please provide x-api-key header.",
-      });
+    return res.status(401).json({
+      error: "API Key missing. Access denied. Please provide x-api-key header",
+    });
   }
 
   try {

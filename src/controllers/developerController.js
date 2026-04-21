@@ -18,14 +18,11 @@ const generateApiKey = async (req, res) => {
     );
     connection.release();
 
-    res
-      .status(201)
-      .json({
-        message:
-          "API Key generated safely store it, it will not be shown again.",
-        apiKey,
-        name,
-      });
+    res.status(201).json({
+      message: "API Key generated safely store it, it will not be shown again.",
+      apiKey,
+      name,
+    });
   } catch (error) {
     res.status(500).json({ error: "Database error" });
   }

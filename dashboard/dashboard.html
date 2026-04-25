@@ -1,335 +1,533 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>University Analytics Dashboard — AlumniIntel</title>
-  <meta name="description" content="University Analytics & Intelligence Dashboard for alumni career tracking, skills gap detection and curriculum planning." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <!-- Chart.js CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <!-- html2canvas + jsPDF for export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <link rel="stylesheet" href="css/dashboard.css" />
-</head>
-<body>
-
-<!-- ===== SIDEBAR ===== -->
-<aside class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <div class="brand">
-      <div class="brand-icon">
-        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="8" fill="url(#sgrad)"/>
-          <path d="M8 22L16 10L24 22H8Z" fill="white" opacity="0.9"/>
-          <circle cx="16" cy="10" r="2.5" fill="white"/>
-          <defs><linearGradient id="sgrad" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
-        </svg>
-      </div>
-      <span class="brand-name">AlumniIntel</span>
-    </div>
-    <button class="sidebar-close" id="sidebar-close" onclick="closeSidebar()">✕</button>
-  </div>
-
-  <nav class="sidebar-nav">
-    <a href="#overview"   class="nav-item active" data-section="overview">
-      <span class="nav-icon">📊</span><span>Overview</span>
-    </a>
-    <a href="#charts"     class="nav-item" data-section="charts">
-      <span class="nav-icon">📈</span><span>Charts & Analytics</span>
-    </a>
-    <a href="#skills"     class="nav-item" data-section="skills">
-      <span class="nav-icon">🧩</span><span>Skills Gap</span>
-    </a>
-    <a href="#careers"    class="nav-item" data-section="careers">
-      <span class="nav-icon">💼</span><span>Career Pathways</span>
-    </a>
-    <a href="#alumni"     class="nav-item" data-section="alumni">
-      <span class="nav-icon">🎓</span><span>View Alumni</span>
-    </a>
-    <a href="#usage"      class="nav-item" data-section="usage">
-      <span class="nav-icon">🔑</span><span>API Usage</span>
-    </a>
-  </nav>
-
-  <div class="sidebar-footer">
-    <div class="user-chip" id="user-chip">
-      <div class="user-avatar" id="user-avatar">U</div>
-      <div class="user-info">
-        <span class="user-name" id="user-name">Loading…</span>
-        <span class="user-role" id="user-role">Analyst</span>
-      </div>
-    </div>
-    <button class="logout-btn" onclick="logout()">Sign Out</button>
-  </div>
-</aside>
-
-<!-- ===== TOPBAR ===== -->
-<div class="topbar">
-  <button class="menu-btn" onclick="openSidebar()">☰</button>
-  <div class="topbar-title" id="page-title">Dashboard Overview</div>
-  <div class="topbar-actions">
-    <button class="btn-export" id="export-btn" onclick="exportReport()">⬇ Export Report</button>
-    <div class="api-key-setup" id="api-key-setup" title="Set Analytics API Key">
-      <button class="btn-key" onclick="showApiKeyModal()">🔑 Set API Key</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===== MAIN CONTENT ===== -->
-<main class="main" id="main-content">
-
-  <!-- Loading overlay -->
-  <div class="loading-overlay" id="loading-overlay">
-    <div class="spinner-ring"></div>
-    <p>Loading analytics data…</p>
-  </div>
-
-  <!-- ===== OVERVIEW SECTION ===== -->
-  <section class="section active" id="section-overview">
-    <div class="section-header">
-      <h2>University Analytics Overview</h2>
-      <p>Real-time intelligence from your alumni dataset</p>
-    </div>
-
-    <!-- KPI Cards -->
-    <div class="kpi-grid" id="kpi-grid">
-      <div class="kpi-card" id="kpi-alumni">
-        <div class="kpi-icon" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">🎓</div>
-        <div class="kpi-body">
-          <div class="kpi-value" id="kpi-v-alumni">—</div>
-          <div class="kpi-label">Total Alumni</div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>University Analytics Dashboard — AlumniIntel</title>
+    <meta
+      name="description"
+      content="University Analytics & Intelligence Dashboard for alumni career tracking, skills gap detection and curriculum planning."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <!-- html2canvas + jsPDF for export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="url(#sgrad)" />
+              <path d="M8 22L16 10L24 22H8Z" fill="white" opacity="0.9" />
+              <circle cx="16" cy="10" r="2.5" fill="white" />
+              <defs>
+                <linearGradient id="sgrad" x1="0" y1="0" x2="32" y2="32">
+                  <stop stop-color="#6366f1" />
+                  <stop offset="1" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <span class="brand-name">AlumniIntel</span>
         </div>
-        <div class="kpi-trend" id="kpi-trend-alumni"></div>
+        <button
+          class="sidebar-close"
+          id="sidebar-close"
+          onclick="closeSidebar()"
+        >
+          ✕
+        </button>
       </div>
-      <div class="kpi-card" id="kpi-certs">
-        <div class="kpi-icon" style="background:linear-gradient(135deg,#06b6d4,#0284c7)">📜</div>
-        <div class="kpi-body">
-          <div class="kpi-value" id="kpi-v-certs">—</div>
-          <div class="kpi-label">Certifications Earned</div>
+
+      <nav class="sidebar-nav">
+        <a href="#overview" class="nav-item active" data-section="overview">
+          <span class="nav-icon">📊</span><span>Overview</span>
+        </a>
+        <a href="#charts" class="nav-item" data-section="charts">
+          <span class="nav-icon">📈</span><span>Charts & Analytics</span>
+        </a>
+        <a href="#skills" class="nav-item" data-section="skills">
+          <span class="nav-icon">🧩</span><span>Skills Gap</span>
+        </a>
+        <a href="#careers" class="nav-item" data-section="careers">
+          <span class="nav-icon">💼</span><span>Career Pathways</span>
+        </a>
+        <a href="#alumni" class="nav-item" data-section="alumni">
+          <span class="nav-icon">🎓</span><span>View Alumni</span>
+        </a>
+        <a href="#usage" class="nav-item" data-section="usage">
+          <span class="nav-icon">🔑</span><span>API Usage</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-chip" id="user-chip">
+          <div class="user-avatar" id="user-avatar">U</div>
+          <div class="user-info">
+            <span class="user-name" id="user-name">Loading…</span>
+            <span class="user-role" id="user-role">Analyst</span>
+          </div>
         </div>
+        <button class="logout-btn" onclick="logout()">Sign Out</button>
       </div>
-      <div class="kpi-card" id="kpi-courses">
-        <div class="kpi-icon" style="background:linear-gradient(135deg,#10b981,#059669)">📚</div>
-        <div class="kpi-body">
-          <div class="kpi-value" id="kpi-v-courses">—</div>
-          <div class="kpi-label">Courses Completed</div>
-        </div>
-      </div>
-      <div class="kpi-card" id="kpi-bids">
-        <div class="kpi-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706)">🏆</div>
-        <div class="kpi-body">
-          <div class="kpi-value" id="kpi-v-bids">—</div>
-          <div class="kpi-label">Active Bids Today</div>
-        </div>
-      </div>
-      <div class="kpi-card" id="kpi-degrees">
-        <div class="kpi-icon" style="background:linear-gradient(135deg,#ec4899,#be185d)">🏛️</div>
-        <div class="kpi-body">
-          <div class="kpi-value" id="kpi-v-degrees">—</div>
-          <div class="kpi-label">Degrees Recorded</div>
-        </div>
-      </div>
-      <div class="kpi-card featured-card" id="kpi-featured">
-        <div class="kpi-icon" style="background:linear-gradient(135deg,#7c3aed,#6366f1)">⭐</div>
-        <div class="kpi-body">
-          <div class="kpi-value" id="kpi-v-featured" style="font-size:1rem">—</div>
-          <div class="kpi-label">Alumnus of the Day</div>
+    </aside>
+
+    <!-- ===== TOPBAR ===== -->
+    <div class="topbar">
+      <button class="menu-btn" onclick="openSidebar()">☰</button>
+      <div class="topbar-title" id="page-title">Dashboard Overview</div>
+      <div class="topbar-actions">
+        <button class="btn-export" id="export-btn" onclick="exportReport()">
+          ⬇ Export Report
+        </button>
+        <div
+          class="api-key-setup"
+          id="api-key-setup"
+          title="Set Analytics API Key"
+        >
+          <button class="btn-key" onclick="showApiKeyModal()">
+            🔑 Set API Key
+          </button>
         </div>
       </div>
     </div>
 
-    <!-- Mini Charts Row -->
-    <div class="mini-charts-row">
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Development Breakdown</h3><span class="chart-badge">Doughnut</span></div>
-        <div class="chart-wrap"><canvas id="chart-breakdown"></canvas></div>
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="main" id="main-content">
+      <!-- Loading overlay -->
+      <div class="loading-overlay" id="loading-overlay">
+        <div class="spinner-ring"></div>
+        <p>Loading analytics data…</p>
       </div>
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Alumni by Programme</h3><span class="chart-badge">Bar</span></div>
-        <div class="chart-wrap"><canvas id="chart-programmes"></canvas></div>
+
+      <!-- ===== OVERVIEW SECTION ===== -->
+      <section class="section active" id="section-overview">
+        <div class="section-header">
+          <h2>University Analytics Overview</h2>
+          <p>Real-time intelligence from your alumni dataset</p>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid" id="kpi-grid">
+          <div class="kpi-card" id="kpi-alumni">
+            <div
+              class="kpi-icon"
+              style="background: linear-gradient(135deg, #6366f1, #8b5cf6)"
+            >
+              🎓
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-value" id="kpi-v-alumni">—</div>
+              <div class="kpi-label">Total Alumni</div>
+            </div>
+            <div class="kpi-trend" id="kpi-trend-alumni"></div>
+          </div>
+          <div class="kpi-card" id="kpi-certs">
+            <div
+              class="kpi-icon"
+              style="background: linear-gradient(135deg, #06b6d4, #0284c7)"
+            >
+              📜
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-value" id="kpi-v-certs">—</div>
+              <div class="kpi-label">Certifications Earned</div>
+            </div>
+          </div>
+          <div class="kpi-card" id="kpi-courses">
+            <div
+              class="kpi-icon"
+              style="background: linear-gradient(135deg, #10b981, #059669)"
+            >
+              📚
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-value" id="kpi-v-courses">—</div>
+              <div class="kpi-label">Courses Completed</div>
+            </div>
+          </div>
+          <div class="kpi-card" id="kpi-bids">
+            <div
+              class="kpi-icon"
+              style="background: linear-gradient(135deg, #f59e0b, #d97706)"
+            >
+              🏆
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-value" id="kpi-v-bids">—</div>
+              <div class="kpi-label">Active Bids Today</div>
+            </div>
+          </div>
+          <div class="kpi-card" id="kpi-degrees">
+            <div
+              class="kpi-icon"
+              style="background: linear-gradient(135deg, #ec4899, #be185d)"
+            >
+              🏛️
+            </div>
+            <div class="kpi-body">
+              <div class="kpi-value" id="kpi-v-degrees">—</div>
+              <div class="kpi-label">Degrees Recorded</div>
+            </div>
+          </div>
+          <div class="kpi-card featured-card" id="kpi-featured">
+            <div
+              class="kpi-icon"
+              style="background: linear-gradient(135deg, #7c3aed, #6366f1)"
+            >
+              ⭐
+            </div>
+            <div class="kpi-body">
+              <div
+                class="kpi-value"
+                id="kpi-v-featured"
+                style="font-size: 1rem"
+              >
+                —
+              </div>
+              <div class="kpi-label">Alumnus of the Day</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mini Charts Row -->
+        <div class="mini-charts-row">
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Development Breakdown</h3>
+              <span class="chart-badge">Doughnut</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-breakdown"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Alumni by Programme</h3>
+              <span class="chart-badge">Bar</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-programmes"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Graduation Year Trend</h3>
+              <span class="chart-badge">Line</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-graduation"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== CHARTS & ANALYTICS SECTION ===== -->
+      <section class="section" id="section-charts">
+        <div class="section-header">
+          <h2>Charts & Analytics</h2>
+          <p>Deep-dive data visualisations across all alumni metrics</p>
+        </div>
+        <div class="charts-full-grid">
+          <div class="chart-card span-2">
+            <div class="chart-card-header">
+              <h3>Post-Graduation Certification Trends</h3>
+              <span class="chart-badge">Line</span>
+            </div>
+            <div class="chart-wrap tall">
+              <canvas id="chart-cert-trends"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Top Career Roles</h3>
+              <span class="chart-badge">Horizontal Bar</span>
+            </div>
+            <div class="chart-wrap tall">
+              <canvas id="chart-roles"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Industry Sector Distribution</h3>
+              <span class="chart-badge">Pie</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-industry"></canvas></div>
+          </div>
+          <div class="chart-card span-2">
+            <div class="chart-card-header">
+              <h3>Top Post-Grad Skills Acquired</h3>
+              <span class="chart-badge">Bar</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-skills-bar"></canvas>
+            </div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Avg Learning per Alumni</h3>
+              <span class="chart-badge">Radar</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-radar"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== SKILLS GAP SECTION ===== -->
+      <section class="section" id="section-skills">
+        <div class="section-header">
+          <h2>Skills Gap Intelligence</h2>
+          <p>Post-graduation learning that reveals curriculum gaps</p>
+        </div>
+        <div class="gap-legend">
+          <span class="gap-badge critical">● Critical ≥50%</span>
+          <span class="gap-badge significant">● Significant ≥25%</span>
+          <span class="gap-badge emerging">● Emerging &lt;25%</span>
+        </div>
+        <div class="charts-full-grid">
+          <div class="chart-card span-2">
+            <div class="chart-card-header">
+              <h3>Top Certifications Not in Curriculum</h3>
+              <span class="chart-badge">Bar</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-gap-certs"></canvas></div>
+          </div>
+          <div class="chart-card span-2">
+            <div class="chart-card-header">
+              <h3>Top Self-Completed Courses</h3>
+              <span class="chart-badge">Bar</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-gap-courses"></canvas>
+            </div>
+          </div>
+        </div>
+        <div class="gap-table-wrap">
+          <h3>Full Skills Gap Report</h3>
+          <table class="data-table" id="gap-table">
+            <thead>
+              <tr>
+                <th>Skill / Certification</th>
+                <th>Type</th>
+                <th>Alumni Count</th>
+                <th>% of Graduates</th>
+                <th>Severity</th>
+              </tr>
+            </thead>
+            <tbody id="gap-table-body">
+              <tr>
+                <td colspan="5" class="loading-row">Loading data…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== CAREER PATHWAYS SECTION ===== -->
+      <section class="section" id="section-careers">
+        <div class="section-header">
+          <h2>Career Pathways</h2>
+          <p>Where alumni go after graduation — roles, employers, timeline</p>
+        </div>
+        <div class="charts-full-grid">
+          <div class="chart-card span-2">
+            <div class="chart-card-header">
+              <h3>Employment Timeline (First Jobs by Year)</h3>
+              <span class="chart-badge">Area</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-timeline"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Top Employers</h3>
+              <span class="chart-badge">Doughnut</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-employers"></canvas></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-card-header">
+              <h3>Top Job Titles</h3>
+              <span class="chart-badge">Polar Area</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart-polar"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== ALUMNI VIEW SECTION ===== -->
+      <section class="section" id="section-alumni">
+        <div class="section-header">
+          <h2>View Alumni</h2>
+          <p>Filter and browse the complete alumni database</p>
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-bar" id="alumni-filters">
+          <input
+            type="text"
+            id="filter-programme"
+            placeholder="🎓 Filter by programme…"
+            oninput="debounceAlumni()"
+          />
+          <input
+            type="number"
+            id="filter-year"
+            placeholder="📅 Graduation year…"
+            min="1990"
+            max="2030"
+            oninput="debounceAlumni()"
+          />
+          <input
+            type="text"
+            id="filter-industry"
+            placeholder="🏢 Filter by industry/role…"
+            oninput="debounceAlumni()"
+          />
+          <button class="btn-clear" onclick="clearAlumniFilters()">
+            Clear Filters
+          </button>
+          <button class="btn-export-csv" onclick="exportAlumniCSV()">
+            ⬇ Export CSV
+          </button>
+        </div>
+
+        <div class="alumni-grid" id="alumni-grid">
+          <div class="loading-placeholder">Loading alumni…</div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination" id="alumni-pagination"></div>
+      </section>
+
+      <!-- ===== API USAGE SECTION ===== -->
+      <section class="section" id="section-usage">
+        <div class="section-header">
+          <h2>API Key Usage & Security</h2>
+          <p>Monitor client access, endpoint hits, and permission scoping</p>
+        </div>
+
+        <!-- Key scoping reference table -->
+        <div class="scope-table-wrap">
+          <h3>Permission Scoping Reference</h3>
+          <table class="data-table scope-table">
+            <thead>
+              <tr>
+                <th>Client Platform</th>
+                <th>API Key Permissions</th>
+                <th>Restricted From</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <span class="client-badge analytics"
+                    >Analytics Dashboard</span
+                  >
+                </td>
+                <td>
+                  <span class="perm-tag">read:alumni</span
+                  ><span class="perm-tag">read:analytics</span>
+                </td>
+                <td class="muted">AR App endpoints</td>
+              </tr>
+              <tr>
+                <td><span class="client-badge ar">Mobile AR App</span></td>
+                <td><span class="perm-tag">read:alumni_of_the_day</span></td>
+                <td class="muted">Analytics endpoints</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="charts-full-grid" style="margin-top: 24px">
+          <div class="chart-card span-2">
+            <div class="chart-card-header">
+              <h3>Daily API Requests (Last 30 Days)</h3>
+              <span class="chart-badge">Line</span>
+            </div>
+            <div class="chart-wrap">
+              <canvas id="chart-daily-requests"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="usage-table-wrap" style="margin-top: 24px">
+          <h3>Endpoint Usage Breakdown</h3>
+          <table class="data-table" id="usage-table">
+            <thead>
+              <tr>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th>Total Hits</th>
+                <th>Last Accessed</th>
+              </tr>
+            </thead>
+            <tbody id="usage-table-body">
+              <tr>
+                <td colspan="4" class="loading-row">Loading…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="key-table-wrap" style="margin-top: 24px">
+          <h3>API Key Activity</h3>
+          <table class="data-table" id="key-table">
+            <thead>
+              <tr>
+                <th>Key Name</th>
+                <th>Client Type</th>
+                <th>Permissions</th>
+                <th>Total Requests</th>
+                <th>Last Used</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="key-table-body">
+              <tr>
+                <td colspan="6" class="loading-row">Loading…</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <!-- ===== API KEY MODAL ===== -->
+    <div
+      class="modal-backdrop hidden"
+      id="api-modal-backdrop"
+      onclick="closeApiKeyModal()"
+    ></div>
+    <div class="modal hidden" id="api-modal">
+      <div class="modal-header">
+        <h3>Configure Analytics API Key</h3>
+        <button onclick="closeApiKeyModal()">✕</button>
       </div>
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Graduation Year Trend</h3><span class="chart-badge">Line</span></div>
-        <div class="chart-wrap"><canvas id="chart-graduation"></canvas></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== CHARTS & ANALYTICS SECTION ===== -->
-  <section class="section" id="section-charts">
-    <div class="section-header">
-      <h2>Charts & Analytics</h2>
-      <p>Deep-dive data visualisations across all alumni metrics</p>
-    </div>
-    <div class="charts-full-grid">
-      <div class="chart-card span-2">
-        <div class="chart-card-header"><h3>Post-Graduation Certification Trends</h3><span class="chart-badge">Line</span></div>
-        <div class="chart-wrap tall"><canvas id="chart-cert-trends"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Top Career Roles</h3><span class="chart-badge">Horizontal Bar</span></div>
-        <div class="chart-wrap tall"><canvas id="chart-roles"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Industry Sector Distribution</h3><span class="chart-badge">Pie</span></div>
-        <div class="chart-wrap"><canvas id="chart-industry"></canvas></div>
-      </div>
-      <div class="chart-card span-2">
-        <div class="chart-card-header"><h3>Top Post-Grad Skills Acquired</h3><span class="chart-badge">Bar</span></div>
-        <div class="chart-wrap"><canvas id="chart-skills-bar"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Avg Learning per Alumni</h3><span class="chart-badge">Radar</span></div>
-        <div class="chart-wrap"><canvas id="chart-radar"></canvas></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== SKILLS GAP SECTION ===== -->
-  <section class="section" id="section-skills">
-    <div class="section-header">
-      <h2>Skills Gap Intelligence</h2>
-      <p>Post-graduation learning that reveals curriculum gaps</p>
-    </div>
-    <div class="gap-legend">
-      <span class="gap-badge critical">● Critical ≥50%</span>
-      <span class="gap-badge significant">● Significant ≥25%</span>
-      <span class="gap-badge emerging">● Emerging &lt;25%</span>
-    </div>
-    <div class="charts-full-grid">
-      <div class="chart-card span-2">
-        <div class="chart-card-header"><h3>Top Certifications Not in Curriculum</h3><span class="chart-badge">Bar</span></div>
-        <div class="chart-wrap"><canvas id="chart-gap-certs"></canvas></div>
-      </div>
-      <div class="chart-card span-2">
-        <div class="chart-card-header"><h3>Top Self-Completed Courses</h3><span class="chart-badge">Bar</span></div>
-        <div class="chart-wrap"><canvas id="chart-gap-courses"></canvas></div>
-      </div>
-    </div>
-    <div class="gap-table-wrap">
-      <h3>Full Skills Gap Report</h3>
-      <table class="data-table" id="gap-table">
-        <thead><tr><th>Skill / Certification</th><th>Type</th><th>Alumni Count</th><th>% of Graduates</th><th>Severity</th></tr></thead>
-        <tbody id="gap-table-body"><tr><td colspan="5" class="loading-row">Loading data…</td></tr></tbody>
-      </table>
-    </div>
-  </section>
-
-  <!-- ===== CAREER PATHWAYS SECTION ===== -->
-  <section class="section" id="section-careers">
-    <div class="section-header">
-      <h2>Career Pathways</h2>
-      <p>Where alumni go after graduation — roles, employers, timeline</p>
-    </div>
-    <div class="charts-full-grid">
-      <div class="chart-card span-2">
-        <div class="chart-card-header"><h3>Employment Timeline (First Jobs by Year)</h3><span class="chart-badge">Area</span></div>
-        <div class="chart-wrap"><canvas id="chart-timeline"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Top Employers</h3><span class="chart-badge">Doughnut</span></div>
-        <div class="chart-wrap"><canvas id="chart-employers"></canvas></div>
-      </div>
-      <div class="chart-card">
-        <div class="chart-card-header"><h3>Top Job Titles</h3><span class="chart-badge">Polar Area</span></div>
-        <div class="chart-wrap"><canvas id="chart-polar"></canvas></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ===== ALUMNI VIEW SECTION ===== -->
-  <section class="section" id="section-alumni">
-    <div class="section-header">
-      <h2>View Alumni</h2>
-      <p>Filter and browse the complete alumni database</p>
+      <p class="modal-desc">
+        Paste the API key generated via
+        <code>POST /api/developer/keys</code> with
+        <code>clientType: "analytics_dashboard"</code>. This grants
+        <strong>read:alumni</strong> +
+        <strong>read:analytics</strong> permissions.
+      </p>
+      <input
+        type="text"
+        id="api-key-input"
+        placeholder="Paste your analytics_dashboard API key…"
+      />
+      <button class="btn-primary" onclick="saveApiKey()">Save & Reload</button>
     </div>
 
-    <!-- Filters -->
-    <div class="filter-bar" id="alumni-filters">
-      <input type="text" id="filter-programme" placeholder="🎓 Filter by programme…" oninput="debounceAlumni()" />
-      <input type="number" id="filter-year" placeholder="📅 Graduation year…" min="1990" max="2030" oninput="debounceAlumni()" />
-      <input type="text" id="filter-industry" placeholder="🏢 Filter by industry/role…" oninput="debounceAlumni()" />
-      <button class="btn-clear" onclick="clearAlumniFilters()">Clear Filters</button>
-      <button class="btn-export-csv" onclick="exportAlumniCSV()">⬇ Export CSV</button>
-    </div>
-
-    <div class="alumni-grid" id="alumni-grid">
-      <div class="loading-placeholder">Loading alumni…</div>
-    </div>
-
-    <!-- Pagination -->
-    <div class="pagination" id="alumni-pagination"></div>
-  </section>
-
-  <!-- ===== API USAGE SECTION ===== -->
-  <section class="section" id="section-usage">
-    <div class="section-header">
-      <h2>API Key Usage & Security</h2>
-      <p>Monitor client access, endpoint hits, and permission scoping</p>
-    </div>
-
-    <!-- Key scoping reference table -->
-    <div class="scope-table-wrap">
-      <h3>Permission Scoping Reference</h3>
-      <table class="data-table scope-table">
-        <thead><tr><th>Client Platform</th><th>API Key Permissions</th><th>Restricted From</th></tr></thead>
-        <tbody>
-          <tr>
-            <td><span class="client-badge analytics">Analytics Dashboard</span></td>
-            <td><span class="perm-tag">read:alumni</span><span class="perm-tag">read:analytics</span></td>
-            <td class="muted">AR App endpoints</td>
-          </tr>
-          <tr>
-            <td><span class="client-badge ar">Mobile AR App</span></td>
-            <td><span class="perm-tag">read:alumni_of_the_day</span></td>
-            <td class="muted">Analytics endpoints</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="charts-full-grid" style="margin-top:24px">
-      <div class="chart-card span-2">
-        <div class="chart-card-header"><h3>Daily API Requests (Last 30 Days)</h3><span class="chart-badge">Line</span></div>
-        <div class="chart-wrap"><canvas id="chart-daily-requests"></canvas></div>
-      </div>
-    </div>
-
-    <div class="usage-table-wrap" style="margin-top:24px">
-      <h3>Endpoint Usage Breakdown</h3>
-      <table class="data-table" id="usage-table">
-        <thead><tr><th>Endpoint</th><th>Method</th><th>Total Hits</th><th>Last Accessed</th></tr></thead>
-        <tbody id="usage-table-body"><tr><td colspan="4" class="loading-row">Loading…</td></tr></tbody>
-      </table>
-    </div>
-
-    <div class="key-table-wrap" style="margin-top:24px">
-      <h3>API Key Activity</h3>
-      <table class="data-table" id="key-table">
-        <thead><tr><th>Key Name</th><th>Client Type</th><th>Permissions</th><th>Total Requests</th><th>Last Used</th><th>Status</th></tr></thead>
-        <tbody id="key-table-body"><tr><td colspan="6" class="loading-row">Loading…</td></tr></tbody>
-      </table>
-    </div>
-  </section>
-
-</main>
-
-<!-- ===== API KEY MODAL ===== -->
-<div class="modal-backdrop hidden" id="api-modal-backdrop" onclick="closeApiKeyModal()"></div>
-<div class="modal hidden" id="api-modal">
-  <div class="modal-header">
-    <h3>Configure Analytics API Key</h3>
-    <button onclick="closeApiKeyModal()">✕</button>
-  </div>
-  <p class="modal-desc">Paste the API key generated via <code>POST /api/developer/keys</code> with <code>clientType: "analytics_dashboard"</code>. This grants <strong>read:alumni</strong> + <strong>read:analytics</strong> permissions.</p>
-  <input type="text" id="api-key-input" placeholder="Paste your analytics_dashboard API key…" />
-  <button class="btn-primary" onclick="saveApiKey()">Save & Reload</button>
-</div>
-
-<script src="js/config.js"></script>
-<script src="js/dashboard.js"></script>
-</body>
+    <script src="js/config.js"></script>
+    <script src="js/dashboard.js"></script>
+  </body>
 </html>

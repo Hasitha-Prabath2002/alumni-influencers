@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>University Analytics Dashboard — Login</title>
+    <meta
+      name="description"
+      content="Secure login for the University Alumni Analytics & Intelligence Dashboard."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/login.css" />
+  </head>
+  <body>
+    <!-- Animated background orbs -->
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <main class="login-container">
+      <div class="login-card" id="login-card">
+        <!-- Logo / Branding -->
+        <div class="brand">
+          <div class="brand-icon">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect width="32" height="32" rx="8" fill="url(#grad1)" />
+              <path d="M8 22L16 10L24 22H8Z" fill="white" opacity="0.9" />
+              <circle cx="16" cy="10" r="2.5" fill="white" />
+              <defs>
+                <linearGradient
+                  id="grad1"
+                  x1="0"
+                  y1="0"
+                  x2="32"
+                  y2="32"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stop-color="#6366f1" />
+                  <stop offset="1" stop-color="#8b5cf6" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <h1>AlumniIntel</h1>
+            <p>University Analytics Platform</p>
+          </div>
+        </div>
+
+        <!-- Tab Switcher -->
+        <div class="tab-switcher" role="tablist">
+          <button
+            class="tab-btn active"
+            id="tab-login"
+            role="tab"
+            aria-selected="true"
+            onclick="switchTab('login')"
+          >
+            Sign In
+          </button>
+          <button
+            class="tab-btn"
+            id="tab-register"
+            role="tab"
+            aria-selected="false"
+            onclick="switchTab('register')"
+          >
+            Register
+          </button>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="alert hidden" id="alert-box" role="alert">
+          <span id="alert-message"></span>
+          <button class="alert-close" onclick="hideAlert()">×</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="login-form" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="login-email">University Email</label>
+            <input
+              type="email"
+              id="login-email"
+              name="email"
+              placeholder="staff@university.edu"
+              autocomplete="email"
+              required
+            />
+            <span class="field-error" id="login-email-err"></span>
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <div class="password-wrap">
+              <input
+                type="password"
+                id="login-password"
+                name="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+                required
+              />
+              <button
+                type="button"
+                class="toggle-pw"
+                aria-label="Toggle password visibility"
+                onclick="togglePassword('login-password', this)"
+              >
+                👁
+              </button>
+            </div>
+            <span class="field-error" id="login-pw-err"></span>
+          </div>
+          <div class="form-actions">
+            <a
+              href="#"
+              class="forgot-link"
+              onclick="
+                switchTab('forgot');
+                return false;
+              "
+              >Forgot password?</a
+            >
+          </div>
+          <button type="submit" class="btn-primary" id="login-btn">
+            <span class="btn-text">Sign In</span>
+            <span class="btn-spinner hidden"></span>
+          </button>
+          <p class="form-footer">
+            University staff only. Alumni login via the main platform.
+          </p>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" class="auth-form hidden" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="reg-first">First Name</label>
+              <input
+                type="text"
+                id="reg-first"
+                placeholder="Jane"
+                autocomplete="given-name"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="reg-last">Last Name</label>
+              <input
+                type="text"
+                id="reg-last"
+                placeholder="Smith"
+                autocomplete="family-name"
+                required
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="reg-email">University Email</label>
+            <input
+              type="email"
+              id="reg-email"
+              placeholder="j.smith@university.edu"
+              autocomplete="email"
+              required
+            />
+            <span class="field-error" id="reg-email-err"></span>
+          </div>
+          <div class="form-group">
+            <label for="reg-password">Password</label>
+            <div class="password-wrap">
+              <input
+                type="password"
+                id="reg-password"
+                placeholder="Min 8 chars, uppercase, number, symbol"
+                autocomplete="new-password"
+                required
+              />
+              <button
+                type="button"
+                class="toggle-pw"
+                aria-label="Toggle password"
+                onclick="togglePassword('reg-password', this)"
+              >
+                👁
+              </button>
+            </div>
+            <div class="pw-strength" id="pw-strength-bar">
+              <div class="pw-strength-fill" id="pw-fill"></div>
+            </div>
+            <span class="field-error" id="reg-pw-err"></span>
+          </div>
+          <button type="submit" class="btn-primary" id="register-btn">
+            <span class="btn-text">Create Account</span>
+            <span class="btn-spinner hidden"></span>
+          </button>
+        </form>
+
+        <!-- Forgot Password Form -->
+        <form id="forgot-form" class="auth-form hidden" novalidate>
+          <p class="form-desc">
+            Enter your university email and we'll send you a reset link.
+          </p>
+          <div class="form-group">
+            <label for="forgot-email">University Email</label>
+            <input
+              type="email"
+              id="forgot-email"
+              placeholder="j.smith@university.edu"
+              required
+            />
+          </div>
+          <button type="submit" class="btn-primary" id="forgot-btn">
+            <span class="btn-text">Send Reset Link</span>
+            <span class="btn-spinner hidden"></span>
+          </button>
+          <a
+            href="#"
+            class="back-link"
+            onclick="
+              switchTab('login');
+              return false;
+            "
+            >← Back to Sign In</a
+          >
+        </form>
+      </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/login.js"></script>
+  </body>
+</html>

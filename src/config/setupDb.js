@@ -1,20 +1,20 @@
-const mysql = require('mysql2/promise');
-require('dotenv').config();
+const mysql = require("mysql2/promise");
+require("dotenv").config();
 
 async function setupDatabase() {
   let connection;
   try {
-    console.log('Connecting to MySQL to verify/create database...');
+    console.log("Connecting to MySQL to verify/create database...");
     // Create connection without selecting the database first
     connection = await mysql.createConnection({
-      host: process.env.DB_HOST || '127.0.0.1',
-      user: process.env.DB_USER || 'root',
-      password: process.env.DB_PASSWORD || ''
+      host: process.env.DB_HOST || "127.0.0.1",
+      user: process.env.DB_USER || "root",
+      password: process.env.DB_PASSWORD || "",
     });
 
-    const dbName = process.env.DB_NAME || 'alumni_db';
+    const dbName = process.env.DB_NAME || "alumni_db";
     await connection.query(`CREATE DATABASE IF NOT EXISTS \`${dbName}\``);
-    console.log(`Database '${dbName}' verified/created.`);
+    console.log(`✅ Database '${dbName}' verified/created.`);
 
     // Switch to the newly created database
     await connection.changeUser({ database: dbName });
@@ -56,8 +56,8 @@ async function setupDatabase() {
       )
     `);
 
-    const tables = ['certifications', 'licences', 'courses'];
-    for(const table of tables) {
+    const tables = ["certifications", "licences", "courses"];
+    for (const table of tables) {
       await connection.query(`
         CREATE TABLE IF NOT EXISTS ${table} (
           id INT AUTO_INCREMENT PRIMARY KEY,
@@ -111,9 +111,30 @@ async function setupDatabase() {
         user_id INT,
         api_key VARCHAR(64) UNIQUE NOT NULL,
         name VARCHAR(100),
+        client_type ENUM('analytics_dashboard', 'mobile_ar', 'general') DEFAULT 'general',
+        permissions JSON,
         is_revoked BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+      )
+    `);
+
+    // University staff accounts for the analytics dashboard login
+    await connection.query(`
+      CREATE TABLE IF NOT EXISTS university_users (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        email VARCHAR(255) UNIQUE NOT NULL,
+        password VARCHAR(255) NOT NULL,
+        first_name VARCHAR(100) NOT NULL,
+        last_name VARCHAR(100) NOT NULL,
+        role ENUM('admin', 'analyst', 'viewer') DEFAULT 'viewer',
+        is_verified BOOLEAN DEFAULT FALSE,
+        verification_token VARCHAR(255),
+        token_expires DATETIME,
+        reset_token VARCHAR(255),
+        reset_token_expires DATETIME,
+        last_login TIMESTAMP NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
@@ -129,9 +150,9 @@ async function setupDatabase() {
       )
     `);
 
-    console.log('Database tables setup completely executed successfully.');
+    console.log("✅ Database tables setup completely executed successfully.");
   } catch (error) {
-    console.error('Error setting up database tables:', error);
+    console.error("❌ Error setting up database tables:", error);
   } finally {
     if (connection) await connection.end();
   }

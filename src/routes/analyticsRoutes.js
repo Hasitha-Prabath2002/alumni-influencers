@@ -1,5 +1,5 @@
-const express = require('express');
-const { requireScopedApiKey } = require('../middleware/scopedApiKeyMiddleware');
+const express = require("express");
+const { requireScopedApiKey } = require("../middleware/scopedApiKeyMiddleware");
 const {
   getOverview,
   getSkillsGap,
@@ -10,8 +10,8 @@ const {
   getAlumniByIndustry,
   getProfessionalDevelopment,
   getAlumniList,
-  getUsageStats
-} = require('../controllers/analyticsController');
+  getUsageStats,
+} = require("../controllers/analyticsController");
 
 const router = express.Router();
 
@@ -38,7 +38,7 @@ const router = express.Router();
  *       403:
  *         description: Insufficient permissions (requires read:analytics)
  */
-router.get('/overview', requireScopedApiKey(['read:analytics']), getOverview);
+router.get("/overview", requireScopedApiKey(["read:analytics"]), getOverview);
 
 /**
  * @swagger
@@ -54,7 +54,11 @@ router.get('/overview', requireScopedApiKey(['read:analytics']), getOverview);
  *       403:
  *         description: Insufficient permissions (requires read:analytics)
  */
-router.get('/skills-gap', requireScopedApiKey(['read:analytics']), getSkillsGap);
+router.get(
+  "/skills-gap",
+  requireScopedApiKey(["read:analytics"]),
+  getSkillsGap,
+);
 
 /**
  * @swagger
@@ -70,7 +74,11 @@ router.get('/skills-gap', requireScopedApiKey(['read:analytics']), getSkillsGap)
  *       403:
  *         description: Insufficient permissions (requires read:analytics)
  */
-router.get('/career-pathways', requireScopedApiKey(['read:analytics']), getCareerPathways);
+router.get(
+  "/career-pathways",
+  requireScopedApiKey(["read:analytics"]),
+  getCareerPathways,
+);
 
 /**
  * @swagger
@@ -84,7 +92,11 @@ router.get('/career-pathways', requireScopedApiKey(['read:analytics']), getCaree
  *       200:
  *         description: Monthly trend data for certifications, courses, licences
  */
-router.get('/certification-trends', requireScopedApiKey(['read:analytics']), getCertificationTrends);
+router.get(
+  "/certification-trends",
+  requireScopedApiKey(["read:analytics"]),
+  getCertificationTrends,
+);
 
 /**
  * @swagger
@@ -98,7 +110,11 @@ router.get('/certification-trends', requireScopedApiKey(['read:analytics']), get
  *       200:
  *         description: Programme distribution data
  */
-router.get('/alumni-by-programme', requireScopedApiKey(['read:alumni']), getAlumniByProgramme);
+router.get(
+  "/alumni-by-programme",
+  requireScopedApiKey(["read:alumni"]),
+  getAlumniByProgramme,
+);
 
 /**
  * @swagger
@@ -112,7 +128,11 @@ router.get('/alumni-by-programme', requireScopedApiKey(['read:alumni']), getAlum
  *       200:
  *         description: Graduation year distribution
  */
-router.get('/alumni-by-graduation', requireScopedApiKey(['read:alumni']), getAlumniByGraduation);
+router.get(
+  "/alumni-by-graduation",
+  requireScopedApiKey(["read:alumni"]),
+  getAlumniByGraduation,
+);
 
 /**
  * @swagger
@@ -126,7 +146,11 @@ router.get('/alumni-by-graduation', requireScopedApiKey(['read:alumni']), getAlu
  *       200:
  *         description: Industry sector distribution
  */
-router.get('/alumni-by-industry', requireScopedApiKey(['read:alumni']), getAlumniByIndustry);
+router.get(
+  "/alumni-by-industry",
+  requireScopedApiKey(["read:alumni"]),
+  getAlumniByIndustry,
+);
 
 /**
  * @swagger
@@ -140,7 +164,11 @@ router.get('/alumni-by-industry', requireScopedApiKey(['read:alumni']), getAlumn
  *       200:
  *         description: Professional development aggregated data
  */
-router.get('/professional-development', requireScopedApiKey(['read:analytics']), getProfessionalDevelopment);
+router.get(
+  "/professional-development",
+  requireScopedApiKey(["read:analytics"]),
+  getProfessionalDevelopment,
+);
 
 /**
  * @swagger
@@ -180,7 +208,7 @@ router.get('/professional-development', requireScopedApiKey(['read:analytics']),
  *       200:
  *         description: Paginated alumni list
  */
-router.get('/alumni', requireScopedApiKey(['read:alumni']), getAlumniList);
+router.get("/alumni", requireScopedApiKey(["read:alumni"]), getAlumniList);
 
 /**
  * @swagger
@@ -194,6 +222,10 @@ router.get('/alumni', requireScopedApiKey(['read:alumni']), getAlumniList);
  *       200:
  *         description: Comprehensive API usage statistics
  */
-router.get('/usage-stats', requireScopedApiKey(['read:analytics']), getUsageStats);
+router.get(
+  "/usage-stats",
+  requireScopedApiKey(["read:analytics"]),
+  getUsageStats,
+);
 
 module.exports = router;

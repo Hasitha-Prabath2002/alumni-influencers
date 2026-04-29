@@ -42,7 +42,15 @@ router.use(authMiddleware);
  */
 router.post(
   "/keys",
-  [body("name").trim().notEmpty().withMessage("Key name is required").escape()],
+  [
+    body("name").trim().notEmpty().withMessage("Key name is required").escape(),
+    body("clientType")
+      .optional()
+      .isIn(["analytics_dashboard", "mobile_ar", "general"])
+      .withMessage(
+        "clientType must be: analytics_dashboard, mobile_ar, or general",
+      ),
+  ],
   generateApiKey,
 );
 

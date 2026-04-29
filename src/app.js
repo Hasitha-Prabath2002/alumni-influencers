@@ -22,11 +22,14 @@ app.use(express.urlencoded({ extended: true }));
 // Serve static files from uploads
 app.use("/uploads", express.static("uploads"));
 
+// Serve University Analytics Dashboard
+app.use("/dashboard", express.static("dashboard"));
+
 // Rate Limiting
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 100, // Limit each IP to 100 requests per windowMs
-  message: "Too many requests from this IP, please try again later",
+  message: "Too many requests from this IP, please try again later.",
 });
 app.use("/api/", apiLimiter);
 
@@ -52,6 +55,13 @@ const swaggerOptions = {
           scheme: "bearer",
           bearerFormat: "JWT",
         },
+        ApiKeyAuth: {
+          type: "apiKey",
+          in: "header",
+          name: "x-api-key",
+          description:
+            "Scoped API key for client applications (Analytics Dashboard or AR App)",
+        },
       },
     },
     security: [{ bearerAuth: [] }],
@@ -68,6 +78,8 @@ app.use("/api/profiles", require("./routes/profileRoutes"));
 app.use("/api/bids", require("./routes/bidRoutes"));
 app.use("/api/developer", require("./routes/developerRoutes"));
 app.use("/api/public", require("./routes/publicRoutes"));
+app.use("/api/analytics", require("./routes/analyticsRoutes"));
+app.use("/api/university-auth", require("./routes/universityAuthRoutes"));
 
 // Error handler middleware
 app.use((err, req, res, next) => {

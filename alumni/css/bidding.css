@@ -1,0 +1,224 @@
+/* ============================================================
+   Alumni Portal — Bidding Page Styles
+   ============================================================ */
+
+.bid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Status Card */
+.bid-status-card {
+  grid-column: 1;
+}
+
+.bid-status-display {
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.status-label {
+  font-size: 1.1rem;
+}
+
+.status-label.winning {
+  color: var(--success);
+}
+
+.status-label.losing {
+  color: var(--error);
+}
+
+.status-label.no-bid {
+  color: var(--text-muted);
+}
+
+.status-desc {
+  font-size: 0.87rem;
+  color: var(--text-secondary);
+}
+
+/* Pulse animation for winning status */
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Monthly Limit Card */
+.monthly-limit-card {
+  grid-column: 2;
+}
+
+.limit-display {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.limit-numbers {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+}
+
+.limit-current {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.limit-separator {
+  font-size: 1.5rem;
+  color: var(--text-muted);
+}
+
+.limit-max {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.limit-bar {
+  height: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.limit-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+}
+
+.limit-bar-fill.full {
+  background: linear-gradient(90deg, #ef4444, #f59e0b);
+}
+
+.limit-note {
+  text-align: center;
+}
+
+/* Place / Update Bid */
+.place-bid-card {
+  grid-column: 1;
+}
+
+.update-bid-card {
+  grid-column: 2;
+}
+
+/* Featured Alumnus */
+.featured-card-full {
+  grid-column: 1 / -1;
+}
+
+.featured-profile {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.featured-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.featured-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.featured-avatar span {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: white;
+}
+
+.featured-info h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.featured-details {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.featured-detail-group {
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.featured-detail-group h4 {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--accent-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.featured-detail-group ul {
+  list-style: none;
+  padding: 0;
+}
+
+.featured-detail-group li {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: 3px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .bid-grid {
+    grid-template-columns: 1fr;
+  }
+  .bid-status-card,
+  .monthly-limit-card,
+  .place-bid-card,
+  .update-bid-card,
+  .featured-card-full {
+    grid-column: 1;
+  }
+  .featured-profile {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

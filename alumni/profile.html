@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Profile — Alumni Portal</title>
+    <meta name="description" content="Manage your alumni profile, degrees, certifications, licences, courses, and employment history." />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/profile.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <!-- ===== TOP NAVIGATION ===== -->
+    <nav class="top-nav">
+      <div class="nav-brand">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="url(#ng)"/>
+          <path d="M8 22L16 10L24 22H8Z" fill="white" opacity="0.9"/>
+          <circle cx="16" cy="10" r="2.5" fill="white"/>
+          <defs><linearGradient id="ng" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+        </svg>
+        <span>Alumni Portal</span>
+      </div>
+      <div class="nav-links">
+        <a href="profile.html" class="active">👤 Profile</a>
+        <a href="bidding.html">💰 Bidding</a>
+        <a href="developer.html">🔑 Developer</a>
+      </div>
+      <div class="nav-user">
+        <span class="nav-user-name" id="nav-user-email"></span>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="page-container">
+      <div class="page-header">
+        <h1>My Profile</h1>
+        <p>Manage your alumni profile, qualifications, and employment history</p>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert hidden" id="page-alert" role="alert">
+        <span id="page-alert-msg"></span>
+        <button class="alert-close" onclick="document.getElementById('page-alert').className='alert hidden'">×</button>
+      </div>
+
+      <!-- Loading State -->
+      <div class="loading-spinner" id="page-loading">
+        <div class="spinner-ring"></div>
+        <p>Loading your profile…</p>
+      </div>
+
+      <!-- Profile Content (hidden until loaded) -->
+      <div id="profile-content" class="hidden">
+
+        <!-- ===== PROFILE SUMMARY CARD ===== -->
+        <div class="card profile-summary-card">
+          <div class="profile-top">
+            <div class="avatar-section">
+              <div class="avatar" id="profile-avatar">
+                <img id="avatar-img" src="" alt="Profile" class="hidden" />
+                <span id="avatar-initials" class="avatar-initials">?</span>
+              </div>
+              <label class="avatar-upload-label" for="avatar-upload">
+                📷 Change Photo
+                <input type="file" id="avatar-upload" accept="image/*" class="hidden" />
+              </label>
+            </div>
+            <div class="profile-info">
+              <h2 id="profile-name">Loading…</h2>
+              <p class="text-muted" id="profile-email"></p>
+              <div class="profile-links" id="profile-linkedin-wrap" class="hidden">
+                <a id="profile-linkedin" href="#" target="_blank" rel="noopener">🔗 LinkedIn Profile</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Bio/LinkedIn -->
+          <div class="profile-edit-section">
+            <div class="card-header">
+              <h3>📝 Bio & LinkedIn</h3>
+              <button class="btn-secondary btn-sm" id="toggle-bio-edit" onclick="toggleBioEdit()">Edit</button>
+            </div>
+            <div id="bio-display">
+              <p id="bio-text" class="text-muted">No bio set yet.</p>
+            </div>
+            <form id="bio-form" class="hidden" onsubmit="saveBio(event)">
+              <div class="form-group">
+                <label for="edit-bio">Biography</label>
+                <textarea id="edit-bio" rows="3" placeholder="Tell us about yourself…"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="edit-linkedin">LinkedIn URL</label>
+                <input type="url" id="edit-linkedin" placeholder="https://linkedin.com/in/yourprofile" />
+              </div>
+              <div class="form-actions">
+                <button type="submit" class="btn-primary btn-sm">Save</button>
+                <button type="button" class="btn-secondary btn-sm" onclick="toggleBioEdit()">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ===== DEGREES SECTION ===== -->
+        <div class="card section-card">
+          <div class="card-header">
+            <h3>🎓 Degrees</h3>
+            <button class="btn-secondary btn-sm" onclick="toggleAddForm('degrees')">+ Add</button>
+          </div>
+          <form id="add-degrees-form" class="add-form hidden" onsubmit="addItem(event, 'degrees')">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Degree Name</label>
+                <input type="text" name="degreeName" required placeholder="BSc Computer Science" />
+              </div>
+              <div class="form-group">
+                <label>University URL</label>
+                <input type="url" name="universityUrl" required placeholder="https://university.edu/degree" />
+              </div>
+            </div>
+            <div class="form-group" style="max-width:220px;">
+              <label>Completion Date</label>
+              <input type="date" name="completionDate" required />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-sm">Add Degree</button>
+              <button type="button" class="btn-secondary btn-sm" onclick="toggleAddForm('degrees')">Cancel</button>
+            </div>
+          </form>
+          <div id="degrees-list" class="items-list">
+            <div class="empty-state"><div class="empty-icon">🎓</div><p>No degrees added yet</p></div>
+          </div>
+        </div>
+
+        <!-- ===== CERTIFICATIONS SECTION ===== -->
+        <div class="card section-card">
+          <div class="card-header">
+            <h3>📜 Certifications</h3>
+            <button class="btn-secondary btn-sm" onclick="toggleAddForm('certifications')">+ Add</button>
+          </div>
+          <form id="add-certifications-form" class="add-form hidden" onsubmit="addItem(event, 'certifications')">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Certification Name</label>
+                <input type="text" name="certName" required placeholder="AWS Cloud Practitioner" />
+              </div>
+              <div class="form-group">
+                <label>Course URL</label>
+                <input type="url" name="courseUrl" required placeholder="https://aws.amazon.com/cert" />
+              </div>
+            </div>
+            <div class="form-group" style="max-width:220px;">
+              <label>Completion Date</label>
+              <input type="date" name="completionDate" required />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-sm">Add Certification</button>
+              <button type="button" class="btn-secondary btn-sm" onclick="toggleAddForm('certifications')">Cancel</button>
+            </div>
+          </form>
+          <div id="certifications-list" class="items-list">
+            <div class="empty-state"><div class="empty-icon">📜</div><p>No certifications added yet</p></div>
+          </div>
+        </div>
+
+        <!-- ===== LICENCES SECTION ===== -->
+        <div class="card section-card">
+          <div class="card-header">
+            <h3>🪪 Licences</h3>
+            <button class="btn-secondary btn-sm" onclick="toggleAddForm('licences')">+ Add</button>
+          </div>
+          <form id="add-licences-form" class="add-form hidden" onsubmit="addItem(event, 'licences')">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Licence Name</label>
+                <input type="text" name="licenceName" required placeholder="Chartered Accountant" />
+              </div>
+              <div class="form-group">
+                <label>Awarding Body URL</label>
+                <input type="url" name="bodyUrl" required placeholder="https://icaew.com" />
+              </div>
+            </div>
+            <div class="form-group" style="max-width:220px;">
+              <label>Completion Date</label>
+              <input type="date" name="completionDate" required />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-sm">Add Licence</button>
+              <button type="button" class="btn-secondary btn-sm" onclick="toggleAddForm('licences')">Cancel</button>
+            </div>
+          </form>
+          <div id="licences-list" class="items-list">
+            <div class="empty-state"><div class="empty-icon">🪪</div><p>No licences added yet</p></div>
+          </div>
+        </div>
+
+        <!-- ===== COURSES SECTION ===== -->
+        <div class="card section-card">
+          <div class="card-header">
+            <h3>📚 Professional Courses</h3>
+            <button class="btn-secondary btn-sm" onclick="toggleAddForm('courses')">+ Add</button>
+          </div>
+          <form id="add-courses-form" class="add-form hidden" onsubmit="addItem(event, 'courses')">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Course Name</label>
+                <input type="text" name="courseName" required placeholder="Google Data Analytics" />
+              </div>
+              <div class="form-group">
+                <label>Course URL</label>
+                <input type="url" name="courseUrl" required placeholder="https://coursera.org/course" />
+              </div>
+            </div>
+            <div class="form-group" style="max-width:220px;">
+              <label>Completion Date</label>
+              <input type="date" name="completionDate" required />
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-sm">Add Course</button>
+              <button type="button" class="btn-secondary btn-sm" onclick="toggleAddForm('courses')">Cancel</button>
+            </div>
+          </form>
+          <div id="courses-list" class="items-list">
+            <div class="empty-state"><div class="empty-icon">📚</div><p>No courses added yet</p></div>
+          </div>
+        </div>
+
+        <!-- ===== EMPLOYMENT SECTION ===== -->
+        <div class="card section-card">
+          <div class="card-header">
+            <h3>💼 Employment History</h3>
+            <button class="btn-secondary btn-sm" onclick="toggleAddForm('employment')">+ Add</button>
+          </div>
+          <form id="add-employment-form" class="add-form hidden" onsubmit="addItem(event, 'employment')">
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" name="companyName" required placeholder="Google" />
+              </div>
+              <div class="form-group">
+                <label>Role / Title</label>
+                <input type="text" name="role" required placeholder="Software Engineer" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" name="startDate" required />
+              </div>
+              <div class="form-group">
+                <label>End Date <span class="text-muted text-xs">(leave empty if current)</span></label>
+                <input type="date" name="endDate" />
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn-primary btn-sm">Add Employment</button>
+              <button type="button" class="btn-secondary btn-sm" onclick="toggleAddForm('employment')">Cancel</button>
+            </div>
+          </form>
+          <div id="employment-list" class="items-list">
+            <div class="empty-state"><div class="empty-icon">💼</div><p>No employment history added yet</p></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/profile.js"></script>
+  </body>
+</html>

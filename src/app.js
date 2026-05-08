@@ -25,6 +25,9 @@ app.use("/uploads", express.static("uploads"));
 // Serve University Analytics Dashboard
 app.use("/dashboard", express.static("dashboard"));
 
+// Serve Alumni Portal pages
+app.use("/alumni", express.static("alumni"));
+
 // Rate Limiting
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes

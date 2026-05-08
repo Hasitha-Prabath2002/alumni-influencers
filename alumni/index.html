@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alumni Influencers — Phantasmagoria Platform</title>
+    <meta name="description" content="The Phantasmagoria Alumni Influencer platform — register, build your profile, bid for featured slots, and inspire students." />
+    <link rel="stylesheet" href="css/common.css" />
+    <style>
+      .landing-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        padding: 24px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .landing-card {
+        width: 100%;
+        max-width: 560px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 20px;
+        padding: 48px 36px;
+        backdrop-filter: blur(24px);
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        animation: cardFadeIn 0.6s ease;
+      }
+
+      @keyframes cardFadeIn {
+        from { opacity: 0; transform: translateY(20px) scale(0.98); }
+        to { opacity: 1; transform: translateY(0) scale(1); }
+      }
+
+      .landing-logo {
+        margin-bottom: 24px;
+      }
+
+      .landing-card h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #c7d2fe, #818cf8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+      }
+
+      .landing-card .subtitle {
+        font-size: 1rem;
+        color: var(--text-secondary);
+        margin-bottom: 32px;
+        line-height: 1.6;
+      }
+
+      .nav-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 24px;
+      }
+
+      .nav-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        padding: 20px 16px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        text-decoration: none;
+        color: var(--text-primary);
+        transition: all var(--transition);
+      }
+
+      .nav-card:hover {
+        background: rgba(99, 102, 241, 0.08);
+        border-color: rgba(99, 102, 241, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15);
+        color: var(--text-primary);
+      }
+
+      .nav-card .nav-card-icon {
+        font-size: 2rem;
+      }
+
+      .nav-card .nav-card-title {
+        font-weight: 600;
+        font-size: 0.92rem;
+      }
+
+      .nav-card .nav-card-desc {
+        font-size: 0.78rem;
+        color: var(--text-muted);
+      }
+
+      .landing-footer {
+        margin-top: 20px;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
+      .landing-footer a {
+        color: var(--accent-light);
+      }
+
+      .auth-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 32px;
+      }
+
+      @media (max-width: 480px) {
+        .nav-grid {
+          grid-template-columns: 1fr;
+        }
+        .landing-card {
+          padding: 32px 20px;
+        }
+        .landing-card h1 {
+          font-size: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <main class="landing-container">
+      <div class="landing-card">
+        <div class="landing-logo">
+          <svg width="56" height="56" viewBox="0 0 32 32" fill="none">
+            <rect width="32" height="32" rx="8" fill="url(#ig)"/>
+            <path d="M8 22L16 10L24 22H8Z" fill="white" opacity="0.9"/>
+            <circle cx="16" cy="10" r="2.5" fill="white"/>
+            <defs><linearGradient id="ig" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+          </svg>
+        </div>
+
+        <h1>Alumni Influencers</h1>
+        <p class="subtitle">
+          University of Eastminster's alumni engagement platform by Phantasmagoria Ltd.
+          Build your profile, bid for featured spots, and inspire the next generation.
+        </p>
+
+        <!-- Auth Actions (shown based on login state) -->
+        <div class="auth-actions" id="auth-actions">
+          <!-- Filled by JS -->
+        </div>
+
+        <div class="nav-grid" id="nav-grid">
+          <a href="profile.html" class="nav-card">
+            <span class="nav-card-icon">👤</span>
+            <span class="nav-card-title">My Profile</span>
+            <span class="nav-card-desc">Manage bio, degrees, certs & more</span>
+          </a>
+          <a href="bidding.html" class="nav-card">
+            <span class="nav-card-icon">💰</span>
+            <span class="nav-card-title">Blind Bidding</span>
+            <span class="nav-card-desc">Bid for Alumni of the Day</span>
+          </a>
+          <a href="developer.html" class="nav-card">
+            <span class="nav-card-icon">🔑</span>
+            <span class="nav-card-title">Developer</span>
+            <span class="nav-card-desc">API keys & usage stats</span>
+          </a>
+          <a href="../api-docs" class="nav-card" target="_blank">
+            <span class="nav-card-icon">📖</span>
+            <span class="nav-card-title">API Docs</span>
+            <span class="nav-card-desc">Swagger documentation</span>
+          </a>
+        </div>
+
+        <div class="landing-footer">
+          <p>Phantasmagoria Ltd © 2026 · University of Eastminster</p>
+          <p class="mt-8">
+            University Staff? <a href="../dashboard/login.html">Analytics Dashboard →</a>
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script>
+      // Show appropriate auth actions based on login state
+      const authDiv = document.getElementById("auth-actions");
+      if (Auth.isLoggedIn()) {
+        const user = Auth.decodeToken();
+        authDiv.innerHTML = `
+          <span class="text-sm text-muted">Signed in as ${user?.email || "Alumni"}</span>
+          <button class="btn-logout" onclick="logout()">Sign Out</button>
+        `;
+      } else {
+        authDiv.innerHTML = `
+          <a href="login.html" class="btn-primary">Sign In</a>
+          <a href="login.html" class="btn-secondary" onclick="setTimeout(()=>document.getElementById&&switchTab&&switchTab('register'),100)">Register</a>
+        `;
+        // Hide nav cards that require auth
+        document.getElementById("nav-grid").style.opacity = "0.5";
+        document.getElementById("nav-grid").style.pointerEvents = "none";
+      }
+    </script>
+  </body>
+</html>

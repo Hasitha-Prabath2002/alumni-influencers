@@ -1,0 +1,133 @@
+/* ============================================================
+   Alumni Portal — Developer Page Styles
+   ============================================================ */
+
+.generate-card {
+  margin-bottom: 0;
+}
+
+/* Key Reveal */
+.key-reveal-card {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--radius);
+  animation: slideDown 0.3s ease;
+}
+
+.key-reveal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.key-reveal-header h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.key-reveal-value {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  overflow-x: auto;
+}
+
+.key-reveal-value code {
+  flex: 1;
+  font-family: "Fira Code", "Consolas", monospace;
+  font-size: 0.82rem;
+  color: var(--warning);
+  word-break: break-all;
+}
+
+/* Keys Table enhancements */
+#keys-table td {
+  vertical-align: middle;
+}
+
+.key-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.status-active {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.status-revoked {
+  color: var(--error);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+/* Stats Modal Content */
+.stats-section {
+  margin-bottom: 20px;
+}
+
+.stats-section h4 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-light);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.78rem;
+}
+
+.stats-info-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.stats-info-item {
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+}
+
+.stats-info-item .stats-label {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stats-info-item .stats-value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stats-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+}
+
+.stats-table th {
+  text-align: left;
+  padding: 8px 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border);
+}
+
+.stats-table td {
+  padding: 7px 10px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}

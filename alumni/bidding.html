@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blind Bidding — Alumni Portal</title>
+    <meta name="description" content="Place blind bids for the Alumni of the Day featured slot." />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/bidding.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <!-- ===== TOP NAVIGATION ===== -->
+    <nav class="top-nav">
+      <div class="nav-brand">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="url(#ng2)"/>
+          <path d="M8 22L16 10L24 22H8Z" fill="white" opacity="0.9"/>
+          <circle cx="16" cy="10" r="2.5" fill="white"/>
+          <defs><linearGradient id="ng2" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+        </svg>
+        <span>Alumni Portal</span>
+      </div>
+      <div class="nav-links">
+        <a href="profile.html">👤 Profile</a>
+        <a href="bidding.html" class="active">💰 Bidding</a>
+        <a href="developer.html">🔑 Developer</a>
+      </div>
+      <div class="nav-user">
+        <span class="nav-user-name" id="nav-user-email"></span>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="page-container">
+      <div class="page-header">
+        <h1>Blind Bidding</h1>
+        <p>Bid for the exclusive Alumni of the Day featured slot</p>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert hidden" id="page-alert" role="alert">
+        <span id="page-alert-msg"></span>
+        <button class="alert-close" onclick="document.getElementById('page-alert').className='alert hidden'">×</button>
+      </div>
+
+      <div class="bid-grid">
+        <!-- ===== BID STATUS CARD ===== -->
+        <div class="card bid-status-card">
+          <div class="card-header">
+            <h3>📊 Your Bid Status</h3>
+            <button class="btn-secondary btn-sm" onclick="loadBidStatus()">↻ Refresh</button>
+          </div>
+          <div class="bid-status-display" id="bid-status-display">
+            <div class="loading-spinner" id="status-loading">
+              <div class="spinner-ring"></div>
+            </div>
+            <div id="status-content" class="hidden">
+              <div class="status-indicator" id="status-indicator">
+                <span class="status-dot no-bid" id="status-dot"></span>
+                <span class="status-label" id="status-label">Loading…</span>
+              </div>
+              <p class="status-desc" id="status-desc"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== MONTHLY LIMIT CARD ===== -->
+        <div class="card monthly-limit-card">
+          <div class="card-header">
+            <h3>📅 Monthly Limits</h3>
+          </div>
+          <div id="monthly-content">
+            <div class="limit-display">
+              <div class="limit-numbers">
+                <span class="limit-current" id="win-count">0</span>
+                <span class="limit-separator">/</span>
+                <span class="limit-max" id="win-max">3</span>
+              </div>
+              <p class="text-muted text-sm">Wins this month</p>
+            </div>
+            <div class="limit-bar">
+              <div class="limit-bar-fill" id="limit-fill" style="width:0%"></div>
+            </div>
+            <p class="limit-note text-xs text-muted" id="limit-note">
+              Max 3 wins per month. Attend a university event for a 4th slot.
+            </p>
+          </div>
+        </div>
+
+        <!-- ===== PLACE BID CARD ===== -->
+        <div class="card place-bid-card">
+          <div class="card-header">
+            <h3>💰 Place a Bid</h3>
+          </div>
+          <p class="text-sm text-muted mb-16">
+            Bid for tomorrow's featured slot. You cannot see other bids — this is a blind auction. The highest bidder at 6 PM wins.
+          </p>
+          <form id="place-bid-form" onsubmit="placeBid(event)">
+            <div class="form-group">
+              <label for="bid-amount">Bid Amount (£)</label>
+              <input type="number" id="bid-amount" min="1" step="0.01" placeholder="Enter your bid amount" required />
+            </div>
+            <button type="submit" class="btn-primary" id="place-bid-btn">
+              <span class="btn-text">Place Bid</span>
+              <span class="btn-spinner hidden"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- ===== UPDATE BID CARD ===== -->
+        <div class="card update-bid-card">
+          <div class="card-header">
+            <h3>📈 Update Bid</h3>
+          </div>
+          <p class="text-sm text-muted mb-16">
+            Already placed a bid? You can increase it (increases only — no decreases allowed).
+          </p>
+          <form id="update-bid-form" onsubmit="updateBid(event)">
+            <div class="form-group">
+              <label for="update-amount">New Amount (£)</label>
+              <input type="number" id="update-amount" min="1" step="0.01" placeholder="Must be higher than current" required />
+            </div>
+            <button type="submit" class="btn-secondary" id="update-bid-btn">
+              <span class="btn-text">Update Bid</span>
+              <span class="btn-spinner hidden"></span>
+            </button>
+          </form>
+        </div>
+
+        <!-- ===== TODAY'S FEATURED ALUMNUS ===== -->
+        <div class="card featured-card-full">
+          <div class="card-header">
+            <h3>⭐ Today's Alumni of the Day</h3>
+          </div>
+          <div id="featured-content">
+            <div class="loading-spinner" id="featured-loading">
+              <div class="spinner-ring"></div>
+            </div>
+            <div id="featured-display" class="hidden"></div>
+            <div id="featured-empty" class="hidden">
+              <div class="empty-state">
+                <div class="empty-icon">🏆</div>
+                <p>No featured alumnus today. Be the first to win!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/bidding.js"></script>
+  </body>
+</html>

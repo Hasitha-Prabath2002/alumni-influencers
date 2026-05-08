@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Developer — Alumni Portal</title>
+    <meta name="description" content="Generate and manage API keys for the Alumni Influencer platform." />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/developer.css" />
+  </head>
+  <body>
+    <div class="bg-orb orb-1"></div>
+    <div class="bg-orb orb-2"></div>
+    <div class="bg-orb orb-3"></div>
+
+    <!-- ===== TOP NAVIGATION ===== -->
+    <nav class="top-nav">
+      <div class="nav-brand">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="8" fill="url(#ng3)"/>
+          <path d="M8 22L16 10L24 22H8Z" fill="white" opacity="0.9"/>
+          <circle cx="16" cy="10" r="2.5" fill="white"/>
+          <defs><linearGradient id="ng3" x1="0" y1="0" x2="32" y2="32"><stop stop-color="#6366f1"/><stop offset="1" stop-color="#8b5cf6"/></linearGradient></defs>
+        </svg>
+        <span>Alumni Portal</span>
+      </div>
+      <div class="nav-links">
+        <a href="profile.html">👤 Profile</a>
+        <a href="bidding.html">💰 Bidding</a>
+        <a href="developer.html" class="active">🔑 Developer</a>
+      </div>
+      <div class="nav-user">
+        <span class="nav-user-name" id="nav-user-email"></span>
+        <button class="btn-logout" onclick="logout()">Sign Out</button>
+      </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="page-container">
+      <div class="page-header">
+        <h1>Developer API Keys</h1>
+        <p>Generate scoped API keys for client applications to access the public API</p>
+      </div>
+
+      <!-- Alert -->
+      <div class="alert hidden" id="page-alert" role="alert">
+        <span id="page-alert-msg"></span>
+        <button class="alert-close" onclick="document.getElementById('page-alert').className='alert hidden'">×</button>
+      </div>
+
+      <!-- ===== GENERATE KEY CARD ===== -->
+      <div class="card generate-card">
+        <div class="card-header">
+          <h3>🔐 Generate New API Key</h3>
+        </div>
+        <p class="text-sm text-muted mb-16">
+          Keys are scoped by client type. Each type grants different permissions. The raw key is shown <strong>only once</strong> — store it securely.
+        </p>
+        <form id="generate-form" onsubmit="generateKey(event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="key-name">Key Name</label>
+              <input type="text" id="key-name" placeholder="My AR App Key" required />
+            </div>
+            <div class="form-group">
+              <label for="key-type">Client Type</label>
+              <select id="key-type">
+                <option value="general">General (read:alumni)</option>
+                <option value="mobile_ar">Mobile AR (read:alumni_of_the_day)</option>
+                <option value="analytics_dashboard">Analytics Dashboard (read:alumni + read:analytics)</option>
+              </select>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="generate-btn">
+            <span class="btn-text">Generate Key</span>
+            <span class="btn-spinner hidden"></span>
+          </button>
+        </form>
+
+        <!-- Generated Key Display -->
+        <div id="generated-key-display" class="hidden">
+          <div class="key-reveal-card">
+            <div class="key-reveal-header">
+              <h4>🔑 Your New API Key</h4>
+              <span class="tag tag-warning">Show Once</span>
+            </div>
+            <div class="key-reveal-value">
+              <code id="generated-key-value"></code>
+              <button class="btn-icon" onclick="copyKey()" title="Copy to clipboard">📋</button>
+            </div>
+            <p class="text-xs text-muted mt-8">
+              ⚠️ This key will not be shown again. Copy and store it securely.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCOPING REFERENCE ===== -->
+      <div class="card mt-24">
+        <div class="card-header">
+          <h3>📋 Permission Scoping Reference</h3>
+        </div>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Client Type</th>
+              <th>Permissions Granted</th>
+              <th>Use Case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="tag tag-accent">general</span></td>
+              <td><span class="tag tag-success">read:alumni</span></td>
+              <td class="text-muted text-sm">Basic public alumni data access</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-accent">mobile_ar</span></td>
+              <td><span class="tag tag-success">read:alumni_of_the_day</span></td>
+              <td class="text-muted text-sm">AR app — featured alumnus endpoint only</td>
+            </tr>
+            <tr>
+              <td><span class="tag tag-accent">analytics_dashboard</span></td>
+              <td>
+                <span class="tag tag-success">read:alumni</span>
+                <span class="tag tag-success">read:analytics</span>
+              </td>
+              <td class="text-muted text-sm">University dashboard — full analytics access</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ===== API KEYS LIST ===== -->
+      <div class="card mt-24">
+        <div class="card-header">
+          <h3>🗂 Your API Keys</h3>
+          <button class="btn-secondary btn-sm" onclick="loadKeys()">↻ Refresh</button>
+        </div>
+        <div id="keys-loading" class="loading-spinner">
+          <div class="spinner-ring"></div>
+        </div>
+        <div id="keys-list" class="hidden">
+          <table class="data-table" id="keys-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Key Prefix</th>
+                <th>Client Type</th>
+                <th>Permissions</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="keys-table-body">
+            </tbody>
+          </table>
+        </div>
+        <div id="keys-empty" class="hidden">
+          <div class="empty-state">
+            <div class="empty-icon">🔑</div>
+            <p>No API keys generated yet</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== USAGE STATS MODAL ===== -->
+      <div class="modal-backdrop hidden" id="stats-backdrop" onclick="closeStatsModal()"></div>
+      <div class="modal hidden" id="stats-modal">
+        <div class="modal-header">
+          <h3>📊 Key Usage Statistics</h3>
+          <button onclick="closeStatsModal()">✕</button>
+        </div>
+        <div id="stats-content">
+          <div class="loading-spinner" id="stats-loading">
+            <div class="spinner-ring"></div>
+          </div>
+          <div id="stats-data" class="hidden"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/developer.js"></script>
+  </body>
+</html>

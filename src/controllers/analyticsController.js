@@ -1,4 +1,4 @@
-const pool = require('../config/db');
+const pool = require("../config/db");
 
 /**
  * GET /api/analytics/overview
@@ -9,26 +9,38 @@ const getOverview = async (req, res) => {
   try {
     const connection = await pool.getConnection();
 
-    const [[{ total_alumni }]] = await connection.query('SELECT COUNT(*) as total_alumni FROM users WHERE is_verified = TRUE');
-    const [[{ total_certifications }]] = await connection.query('SELECT COUNT(*) as total_certifications FROM certifications');
-    const [[{ total_courses }]] = await connection.query('SELECT COUNT(*) as total_courses FROM courses');
-    const [[{ total_degrees }]] = await connection.query('SELECT COUNT(*) as total_degrees FROM degrees');
-    const [[{ total_employment }]] = await connection.query('SELECT COUNT(*) as total_employment FROM employment');
-    const [[{ total_licences }]] = await connection.query('SELECT COUNT(*) as total_licences FROM licences');
+    const [[{ total_alumni }]] = await connection.query(
+      "SELECT COUNT(*) as total_alumni FROM users WHERE is_verified = TRUE",
+    );
+    const [[{ total_certifications }]] = await connection.query(
+      "SELECT COUNT(*) as total_certifications FROM certifications",
+    );
+    const [[{ total_courses }]] = await connection.query(
+      "SELECT COUNT(*) as total_courses FROM courses",
+    );
+    const [[{ total_degrees }]] = await connection.query(
+      "SELECT COUNT(*) as total_degrees FROM degrees",
+    );
+    const [[{ total_employment }]] = await connection.query(
+      "SELECT COUNT(*) as total_employment FROM employment",
+    );
+    const [[{ total_licences }]] = await connection.query(
+      "SELECT COUNT(*) as total_licences FROM licences",
+    );
 
     // Alumnus of the day
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     const [todayWinner] = await connection.query(
       `SELECT u.first_name, u.last_name, u.email 
        FROM bids b JOIN users u ON b.user_id = u.id 
        WHERE b.bid_date = ? AND b.status = 'WON' LIMIT 1`,
-      [today]
+      [today],
     );
 
     // Total active bids
     const [[{ active_bids }]] = await connection.query(
       "SELECT COUNT(*) as active_bids FROM bids WHERE bid_date = ? AND status = 'PENDING'",
-      [today]
+      [today],
     );
 
     connection.release();
@@ -41,11 +53,11 @@ const getOverview = async (req, res) => {
       totalEmployment: total_employment,
       totalLicences: total_licences,
       activeBidsToday: active_bids,
-      alumnusOfTheDay: todayWinner[0] || null
+      alumnusOfTheDay: todayWinner[0] || null,
     });
   } catch (error) {
-    console.error('Analytics overview error:', error);
-    res.status(500).json({ error: 'Database error fetching overview' });
+    console.error("Analytics overview error:", error);
+    res.status(500).json({ error: "Database error fetching overview" });
   }
 };
 
@@ -87,30 +99,30 @@ const getSkillsGap = async (req, res) => {
 
     // Classify gap severity
     const classify = (pct) => {
-      if (pct >= 50) return 'critical';
-      if (pct >= 25) return 'significant';
-      return 'emerging';
+      if (pct >= 50) return "critical";
+      if (pct >= 25) return "significant";
+      return "emerging";
     };
 
-    const enrichedCerts = certificationCounts.map(s => ({
+    const enrichedCerts = certificationCounts.map((s) => ({
       ...s,
-      type: 'certification',
-      severity: classify(s.percentage)
+      type: "certification",
+      severity: classify(s.percentage),
     }));
 
-    const enrichedCourses = courseCounts.map(s => ({
+    const enrichedCourses = courseCounts.map((s) => ({
       ...s,
-      type: 'course',
-      severity: classify(s.percentage)
+      type: "course",
+      severity: classify(s.percentage),
     }));
 
     res.json({
       certifications: enrichedCerts,
-      courses: enrichedCourses
+      courses: enrichedCourses,
     });
   } catch (error) {
-    console.error('Skills gap error:', error);
-    res.status(500).json({ error: 'Database error fetching skills gap data' });
+    console.error("Skills gap error:", error);
+    res.status(500).json({ error: "Database error fetching skills gap data" });
   }
 };
 
@@ -161,8 +173,8 @@ const getCareerPathways = async (req, res) => {
 
     res.json({ roles, companies, timeline });
   } catch (error) {
-    console.error('Career pathways error:', error);
-    res.status(500).json({ error: 'Database error fetching career pathways' });
+    console.error("Career pathways error:", error);
+    res.status(500).json({ error: "Database error fetching career pathways" });
   }
 };
 
@@ -213,11 +225,13 @@ const getCertificationTrends = async (req, res) => {
     res.json({
       certifications: certsByMonth,
       courses: coursesByMonth,
-      licences: licencesByMonth
+      licences: licencesByMonth,
     });
   } catch (error) {
-    console.error('Certification trends error:', error);
-    res.status(500).json({ error: 'Database error fetching certification trends' });
+    console.error("Certification trends error:", error);
+    res
+      .status(500)
+      .json({ error: "Database error fetching certification trends" });
   }
 };
 
@@ -244,8 +258,10 @@ const getAlumniByProgramme = async (req, res) => {
 
     res.json({ programmes });
   } catch (error) {
-    console.error('Alumni by programme error:', error);
-    res.status(500).json({ error: 'Database error fetching alumni by programme' });
+    console.error("Alumni by programme error:", error);
+    res
+      .status(500)
+      .json({ error: "Database error fetching alumni by programme" });
   }
 };
 
@@ -272,8 +288,10 @@ const getAlumniByGraduation = async (req, res) => {
 
     res.json({ byYear });
   } catch (error) {
-    console.error('Alumni by graduation error:', error);
-    res.status(500).json({ error: 'Database error fetching alumni by graduation' });
+    console.error("Alumni by graduation error:", error);
+    res
+      .status(500)
+      .json({ error: "Database error fetching alumni by graduation" });
   }
 };
 
@@ -314,8 +332,10 @@ const getAlumniByIndustry = async (req, res) => {
 
     res.json({ byCompany, byRole });
   } catch (error) {
-    console.error('Alumni by industry error:', error);
-    res.status(500).json({ error: 'Database error fetching alumni by industry' });
+    console.error("Alumni by industry error:", error);
+    res
+      .status(500)
+      .json({ error: "Database error fetching alumni by industry" });
   }
 };
 
@@ -345,19 +365,25 @@ const getProfessionalDevelopment = async (req, res) => {
 
     // Per-alumnus development count
     const [[{ avg_certs }]] = await connection.query(
-      'SELECT ROUND(AVG(cnt), 1) as avg_certs FROM (SELECT user_id, COUNT(*) as cnt FROM certifications GROUP BY user_id) t'
+      "SELECT ROUND(AVG(cnt), 1) as avg_certs FROM (SELECT user_id, COUNT(*) as cnt FROM certifications GROUP BY user_id) t",
     );
     const [[{ avg_courses }]] = await connection.query(
-      'SELECT ROUND(AVG(cnt), 1) as avg_courses FROM (SELECT user_id, COUNT(*) as cnt FROM courses GROUP BY user_id) t'
+      "SELECT ROUND(AVG(cnt), 1) as avg_courses FROM (SELECT user_id, COUNT(*) as cnt FROM courses GROUP BY user_id) t",
     );
     const [[{ avg_licences }]] = await connection.query(
-      'SELECT ROUND(AVG(cnt), 1) as avg_licences FROM (SELECT user_id, COUNT(*) as cnt FROM licences GROUP BY user_id) t'
+      "SELECT ROUND(AVG(cnt), 1) as avg_licences FROM (SELECT user_id, COUNT(*) as cnt FROM licences GROUP BY user_id) t",
     );
 
     // Distribution breakdown
-    const [[{ cert_total }]] = await connection.query('SELECT COUNT(*) as cert_total FROM certifications');
-    const [[{ course_total }]] = await connection.query('SELECT COUNT(*) as course_total FROM courses');
-    const [[{ licence_total }]] = await connection.query('SELECT COUNT(*) as licence_total FROM licences');
+    const [[{ cert_total }]] = await connection.query(
+      "SELECT COUNT(*) as cert_total FROM certifications",
+    );
+    const [[{ course_total }]] = await connection.query(
+      "SELECT COUNT(*) as course_total FROM courses",
+    );
+    const [[{ licence_total }]] = await connection.query(
+      "SELECT COUNT(*) as licence_total FROM licences",
+    );
 
     connection.release();
 
@@ -366,17 +392,19 @@ const getProfessionalDevelopment = async (req, res) => {
       averages: {
         certificationsPerAlumnus: avg_certs || 0,
         coursesPerAlumnus: avg_courses || 0,
-        licencesPerAlumnus: avg_licences || 0
+        licencesPerAlumnus: avg_licences || 0,
       },
       distribution: {
         certifications: cert_total,
         courses: course_total,
-        licences: licence_total
-      }
+        licences: licence_total,
+      },
     });
   } catch (error) {
-    console.error('Professional development error:', error);
-    res.status(500).json({ error: 'Database error fetching professional development data' });
+    console.error("Professional development error:", error);
+    res
+      .status(500)
+      .json({ error: "Database error fetching professional development data" });
   }
 };
 
@@ -408,19 +436,19 @@ const getAlumniList = async (req, res) => {
     const params = [];
 
     if (programme) {
-      query += ' AND d.degree_name LIKE ?';
+      query += " AND d.degree_name LIKE ?";
       params.push(`%${programme}%`);
     }
     if (year) {
-      query += ' AND YEAR(d.completion_date) = ?';
+      query += " AND YEAR(d.completion_date) = ?";
       params.push(parseInt(year));
     }
     if (industry) {
-      query += ' AND (e.company_name LIKE ? OR e.role LIKE ?)';
+      query += " AND (e.company_name LIKE ? OR e.role LIKE ?)";
       params.push(`%${industry}%`, `%${industry}%`);
     }
 
-    query += ' GROUP BY u.id ORDER BY u.created_at DESC LIMIT ? OFFSET ?';
+    query += " GROUP BY u.id ORDER BY u.created_at DESC LIMIT ? OFFSET ?";
     params.push(parseInt(limit), offset);
 
     const [alumni] = await connection.query(query, params);
@@ -434,9 +462,18 @@ const getAlumniList = async (req, res) => {
       WHERE u.is_verified = TRUE
     `;
     const countParams = [];
-    if (programme) { countQuery += ' AND d.degree_name LIKE ?'; countParams.push(`%${programme}%`); }
-    if (year) { countQuery += ' AND YEAR(d.completion_date) = ?'; countParams.push(parseInt(year)); }
-    if (industry) { countQuery += ' AND (e.company_name LIKE ? OR e.role LIKE ?)'; countParams.push(`%${industry}%`, `%${industry}%`); }
+    if (programme) {
+      countQuery += " AND d.degree_name LIKE ?";
+      countParams.push(`%${programme}%`);
+    }
+    if (year) {
+      countQuery += " AND YEAR(d.completion_date) = ?";
+      countParams.push(parseInt(year));
+    }
+    if (industry) {
+      countQuery += " AND (e.company_name LIKE ? OR e.role LIKE ?)";
+      countParams.push(`%${industry}%`, `%${industry}%`);
+    }
 
     const [[{ total }]] = await connection.query(countQuery, countParams);
     connection.release();
@@ -447,12 +484,12 @@ const getAlumniList = async (req, res) => {
         total,
         page: parseInt(page),
         limit: parseInt(limit),
-        pages: Math.ceil(total / parseInt(limit))
-      }
+        pages: Math.ceil(total / parseInt(limit)),
+      },
     });
   } catch (error) {
-    console.error('Alumni list error:', error);
-    res.status(500).json({ error: 'Database error fetching alumni list' });
+    console.error("Alumni list error:", error);
+    res.status(500).json({ error: "Database error fetching alumni list" });
   }
 };
 
@@ -511,8 +548,8 @@ const getUsageStats = async (req, res) => {
 
     res.json({ endpointStats, keyUsage, dailyRequests });
   } catch (error) {
-    console.error('Usage stats error:', error);
-    res.status(500).json({ error: 'Database error fetching usage stats' });
+    console.error("Usage stats error:", error);
+    res.status(500).json({ error: "Database error fetching usage stats" });
   }
 };
 
@@ -526,5 +563,5 @@ module.exports = {
   getAlumniByIndustry,
   getProfessionalDevelopment,
   getAlumniList,
-  getUsageStats
+  getUsageStats,
 };
